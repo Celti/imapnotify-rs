@@ -1,0 +1,10 @@
+[celti-dot-name]
+host = "mail.celti.name"
+port = 143
+starttls = true
+username = "celti@celti.name"
+password_eval = "pass show mail/celti@celti.name | head -n1"
+# You could put a plaintext password in here as `password = "..."` -- but why?
+on_new_mail = "mbsync celti-dot-name"
+on_new_mail_post = "notmuch new"
+boxes = [ "INBOX", "Notifications" ]

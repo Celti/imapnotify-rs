@@ -1,0 +1,22 @@
+[package]
+name = "imapnotify-rs"
+version = "0.1.0"
+authors = ["Celti Burroughs <celti@celti.name>"]
+edition = "2018"
+description = "notify support for your IMAP IDLE inbox"
+readme = "README.md"
+repository = "https://github.com/Celti/imapnotify-rs"
+keywords = ["email","cli","imap","notify"]
+categories = ["command-line-utilities","email"]
+license = "MIT/Apache-2.0"
+
+[dependencies]
+anyhow = "1.0.23"
+crossbeam = "0.7.3"
+imap = "1.0.2"
+native-tls = "0.2.3"
+rayon = "1.2.1"
+rpassword = "4.0.1"
+serde = { version = "1.0.103", features = ["derive"] }
+toml = "0.5.5"
+xdg = "2.2.0"
