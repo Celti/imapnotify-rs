@@ -190,7 +190,7 @@ fn configure<'a>() -> Result<Vec<Account<'a>>> {
 
     let accounts = config.accounts.into_iter().map(|(_k,v)|v).collect();
 
-    Ok(dbg!(accounts))
+    Ok(accounts)
 }
 
 fn main() -> Result<()> {
