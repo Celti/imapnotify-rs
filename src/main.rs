@@ -23,7 +23,8 @@ struct Account<'a> {
     password: Cow<'a, str>,
     on_new_mail: Cow<'a, str>,
     on_new_mail_post: Option<Cow<'a, str>>,
-    boxes: Vec<Cow<'a, str>>,
+    #[serde(borrow)]
+    boxes: Cow<'a, [Cow<'a, str>]>,
 }
 
 #[derive(Clone, Debug, Deserialize)]
@@ -44,9 +45,9 @@ impl<'a> Account<'a> {
 
 }
 
-impl<'a> Connection<'a, '_> {
-    fn new<'c: 'a>(account: &'a Account) -> Result<Connection<'c, 'a>, imap::error::Error> {
         let tls = TlsConnector::builder().build()?;
+impl<'a: 'b, 'b> Connection<'a, 'b> {
+    fn new<'c: 'a>(account: &'a Account<'a>) -> Result<Connection<'c, 'a>, imap::error::Error> {
 
         let client = if account.starttls {
             imap::connect_insecure((&*account.host, account.port))?.secure(&*account.host, &tls)?
@@ -77,7 +78,7 @@ impl<'a> Connection<'a, '_> {
         loop {
             let mut uids = HashSet::new();
 
-            for mbox in &self.account.boxes {
+            for mbox in &*self.account.boxes {
                 self.session.examine(mbox)?;
                 let search = self.session.uid_search("NEW 1:*")?;
                 uids.extend(search);
