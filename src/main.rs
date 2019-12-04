@@ -45,13 +45,16 @@ impl<'a> Account<'a> {
 
 }
 
-        let tls = TlsConnector::builder().build()?;
 impl<'a: 'b, 'b> Connection<'a, 'b> {
     fn new<'c: 'a>(account: &'a Account<'a>) -> Result<Connection<'c, 'a>, imap::error::Error> {
+        let tls = TlsConnector::new()?;
 
         let client = if account.starttls {
-            imap::connect_insecure((&*account.host, account.port))?.secure(&*account.host, &tls)?
-        } else {
+            // imap::connect_insecure((&*account.host, account.port))?.secure(&*account.host, &tls)?
+            let stream = TcpStream::connect((&*account.host, account.port))?;
+            imap::Client::new(stream).secure(&*account.host, &tls)?
+            // imap::connect_starttls((&*account.host, account.port), &*account.host, &tls)?
+        } else { 
             imap::connect((&*account.host, account.port), &*account.host, &tls)?
         }; // I considered putting a check to allow unencrypted connections here, but... why?
 
